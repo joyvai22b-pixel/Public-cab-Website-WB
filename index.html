@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Public Cab - Premier 3D Direct App Download Portal</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
+
+  <style>
+    @keyframes pulse-glow {
+      0%, 100% { transform: translateY(0) scale(1); box-shadow: 0 0 25px rgba(250, 204, 21, 0.6); }
+      50% { transform: translateY(-12px) scale(1.04); box-shadow: 0 0 45px rgba(250, 204, 21, 0.9); }
+    }
+    @keyframes arrow-bounce {
+      0%, 100% { transform: translateY(0); opacity: 0.7; }
+      50% { transform: translateY(12px); opacity: 1; }
+    }
+    @keyframes bar-grow {
+      0% { width: 0%; }
+      50% { width: 75%; }
+      100% { width: 100%; }
+    }
+    .btn-pulse {
+      animation: pulse-glow 1.8s infinite ease-in-out;
+    }
+    .arrow-anim {
+      animation: arrow-bounce 1.2s infinite ease-in-out;
+    }
+    .progress-fill {
+      animation: bar-grow 3.2s ease-in-out forwards;
+    }
+    .glass-box {
+      background: rgba(15, 23, 42, 0.85);
+      backdrop-filter: blur(16px);
+      border: 1px solid rgba(250, 204, 21, 0.25);
+    }
+    .glow-border {
+      box-shadow: 0 0 35px rgba(245, 158, 11, 0.35);
+    }
+  </style>
+</head>
+<body class="bg-slate-950 text-slate-100 font-sans min-h-screen flex flex-col justify-between select-none">
+
+  <!-- Sticky Top Header Navigation -->
+  <header class="bg-slate-900/90 backdrop-blur-md border-b border-yellow-500/20 sticky top-0 z-40 shadow-2xl">
+    <div class="max-w-4xl mx-auto px-4 py-3 flex items-center justify-between">
+      <!-- Hidden Admin Activation Area: Click Logo 20 Times -->
+      <div class="flex items-center gap-3 cursor-pointer" onclick="handleSecretClick()">
+        <img id="siteLogo" src="https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?auto=format&fit=crop&w=150&q=80" alt="Public Cab Logo" class="w-12 h-12 object-cover rounded-2xl bg-yellow-400 p-0.5 border-2 border-yellow-400 shadow-[0_0_20px_rgba(250,204,21,0.6)] transition-transform active:scale-90">
+        <div>
+          <h1 class="font-black text-xl md:text-2xl tracking-wider bg-gradient-to-r from-yellow-400 via-amber-300 to-yellow-500 bg-clip-text text-transparent">PUBLIC CAB</h1>
+          <p class="text-[11px] text-yellow-400 font-bold uppercase tracking-widest">অনলাইন ক্যাব ও তৎকাল সার্ভিস</p>
+        </div>
+      </div>
+      
+      <!-- Top Quick Install Button -->
+      <button onclick="startAppInstallationProcess()" class="bg-gradient-to-r from-yellow-400 via-amber-500 to-yellow-500 text-slate-950 font-black px-5 py-2.5 rounded-full shadow-[0_0_20px_rgba(245,158,11,0.6)] hover:brightness-110 active:scale-95 transition flex items-center gap-2 text-sm uppercase tracking-wider">
+        <i class="fa-solid fa-download text-base"></i>
+        <span>ইনস্টল করুন</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Main Showcase Hub -->
+  <main class="max-w-4xl mx-auto px-4 py-6 space-y-8 flex-grow w-full">
+    
+    <!-- 3D Banner Showcase 1: Main Taxi Ride Offer -->
+    <div class="relative overflow-hidden rounded-3xl glow-border border-2 border-yellow-400/40">
+      <img src="https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?auto=format&fit=crop&w=1200&q=80" alt="Yellow Cab Online Taxi Booking" class="w-full h-64 md:h-84 object-cover brightness-40">
+      <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/50 to-transparent p-6 md:p-8 flex flex-col justify-end space-y-3">
+        <span class="bg-yellow-400 text-slate-950 text-xs font-black px-3.5 py-1 rounded-full uppercase tracking-widest w-fit shadow-md">🔥 অফিশিয়াল অ্যাপ পোর্টাল</span>
+        <h2 class="text-3xl md:text-5xl font-black text-white leading-tight">প্রথম রাইডে <span class="text-yellow-400">১০০% ফ্রি সফর!</span></h2>
+        <p class="text-slate-200 text-sm md:text-base font-medium max-w-lg">মোবাইলে জিপিএস ম্যাপ দেখে সরাসরি ক্যাব, টোটো, বাইক রাইড এবং লোকাল এক্সপ্রেস পার্সেল বুক করুন।</p>
+      </div>
+    </div>
+
+    <!-- MAIN Pulsating Action Button: Download & Direct Install Trigger -->
+    <div class="flex flex-col items-center justify-center py-2 relative">
+      <div class="arrow-anim text-yellow-400 text-4xl mb-3">
+        <i class="fa-solid fa-angles-down"></i>
+      </div>
+      <button onclick="startAppInstallationProcess()" class="btn-pulse w-full max-w-lg bg-gradient-to-r from-yellow-400 via-amber-400 to-yellow-500 text-slate-950 font-black text-2xl py-6 px-8 rounded-3xl border-4 border-yellow-200 flex items-center justify-center gap-4 active:scale-95 transition cursor-pointer">
+        <i class="fa-solid fa-cloud-arrow-down text-4xl"></i>
+        <div class="text-left">
+          <div class="text-xl md:text-2xl font-black uppercase tracking-wider leading-none">ডাইরেক্ট অ্যাপ ডাউনলোড</div>
+          <div class="text-xs font-bold text-slate-900 opacity-90 mt-1">এক ক্লিকেই মোবাইলে সরাসরি ইনস্টলেশন চালু করুন</div>
+        </div>
+      </button>
+    </div>
+
+    <!-- 3D Mobile App Booking & Fleet Showcase Grid -->
+    <div class="space-y-4">
+      <div class="flex items-center justify-between">
+        <h3 class="text-xl font-black text-yellow-400 flex items-center gap-2">
+          <i class="fa-solid fa-mobile-screen-button"></i> মোবাইল অনলাইন অ্যাপ সার্ভিস
+        </h3>
+        <span class="text-xs text-slate-400 font-bold uppercase">২৪/৭ লাইভ বুকিং</span>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+        
+        <!-- Live GPS Map & App Interface Card -->
+        <div onclick="startAppInstallationProcess()" class="glass-box rounded-3xl overflow-hidden cursor-pointer group hover:border-yellow-400 transition shadow-xl">
+          <div class="relative h-52 overflow-hidden">
+            <img src="https://images.unsplash.com/photo-1526778548025-fa2f459cd5c1?auto=format&fit=crop&w=800&q=80" alt="Mobile App GPS Navigation Map" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
+            <span class="absolute top-3 left-3 bg-slate-950/90 text-yellow-400 font-bold text-xs px-3 py-1 rounded-full border border-yellow-400/40">গুগল ম্যাপস ট্র্যাকিং</span>
+          </div>
+          <div class="p-5 space-y-2">
+            <div class="flex justify-between items-center">
+              <h4 class="font-extrabold text-lg text-white">লাইভ মোবাইল ম্যাপ বুকিং</h4>
+              <span class="text-yellow-400 text-sm font-black">তৎকাল পিকআপ</span>
+            </div>
+            <p class="text-xs text-slate-400">অ্যাপ ওপেন করলেই জিপিএস লোকেশনে সঙ্গে সঙ্গে নিকটস্থ ড্রাইভার আপনার সামনে পৌঁছাবে।</p>
+          </div>
+        </div>
+
+        <!-- Passengers Booking & Standing Showcase -->
+        <div onclick="startAppInstallationProcess()" class="glass-box rounded-3xl overflow-hidden cursor-pointer group hover:border-yellow-400 transition shadow-xl">
+          <div class="relative h-52 overflow-hidden">
+            <img src="https://images.unsplash.com/photo-1556122071-e404eaedb77f?auto=format&fit=crop&w=800&q=80" alt="Passengers Riding Premium Cab" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
+            <span class="absolute top-3 left-3 bg-slate-950/90 text-yellow-400 font-bold text-xs px-3 py-1 rounded-full border border-yellow-400/40">এসি ক্যাব রাইড</span>
+          </div>
+          <div class="p-5 space-y-2">
+            <div class="flex justify-between items-center">
+              <h4 class="font-extrabold text-lg text-white">সিটি ও দূরপাল্লার ট্যাক্সি</h4>
+              <span class="text-yellow-400 text-sm font-black">সবচেয়ে সস্তা</span>
+            </div>
+            <p class="text-xs text-slate-400">নিরাপদ ভ্রমণ, অভিজ্ঞ ড্রাইভার এবং সবচেয়ে কম ফেয়ারে যেকোনো গন্তব্যে যাতায়াত।</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Additional Service Cards: Toto, Bike & Parcel Delivery -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+      
+      <!-- Toto & Auto Booking Showcase -->
+      <div onclick="startAppInstallationProcess()" class="glass-box rounded-3xl p-5 cursor-pointer hover:border-yellow-400 transition flex items-center gap-5 shadow-xl">
+        <img src="https://images.unsplash.com/photo-1558981806-ec527fa84c39?auto=format&fit=crop&w=400&q=80" alt="Toto and Bike Taxi Pickup" class="w-24 h-24 rounded-2xl object-cover border-2 border-yellow-400/40 shrink-0">
+        <div class="space-y-1">
+          <span class="bg-amber-400/20 text-amber-300 font-bold text-[10px] px-2 py-0.5 rounded uppercase">লোকাল রিকশা</span>
+          <h4 class="font-bold text-base text-white">তৎকাল টোটো ও ই-রিকশা</h4>
+          <p class="text-xs text-slate-400">গলি থেকে রাজপথ — মাত্র কয়েক সেকেন্ডে রাইড হাজির।</p>
+        </div>
+      </div>
+
+      <!-- Express Parcel Delivery Showcase -->
+      <div onclick="startAppInstallationProcess()" class="glass-box rounded-3xl p-5 cursor-pointer hover:border-yellow-400 transition flex items-center gap-5 shadow-xl">
+        <img src="https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&w=400&q=80" alt="Parcel Logistics Delivery" class="w-24 h-24 rounded-2xl object-cover border-2 border-yellow-400/40 shrink-0">
+        <div class="space-y-1">
+          <span class="bg-yellow-400/20 text-yellow-300 font-bold text-[10px] px-2 py-0.5 rounded uppercase">ফার্স্ট ডেলিভারি</span>
+          <h4 class="font-bold text-base text-white">এক্সপ্রেস পার্সেল সার্ভিস</h4>
+          <p class="text-xs text-slate-400">যেকোনো ডকুমেন্ট বা প্রয়োজনীয় মালপত্র দ্রুত গন্তব্যে পাঠান।</p>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Bottom Download Call To Action Box -->
+    <div class="glass-box rounded-3xl p-8 text-center space-y-4 border-2 border-yellow-400/60 shadow-2xl">
+      <h3 class="text-2xl md:text-3xl font-black text-white">আজই ইনস্টল করুন <span class="text-yellow-400">Public Cab</span> অ্যাপ!</h3>
+      <p class="text-slate-300 text-xs md:text-sm max-w-md mx-auto">প্লে-স্টোরে আর খুঁজতে হবে না! নিচের বাটনে ক্লিক করা মাত্রই ডাইরেক্ট ইনস্টলেশন শুরু হয়ে যাবে।</p>
+      <button onclick="startAppInstallationProcess()" class="bg-gradient-to-r from-yellow-400 via-amber-400 to-yellow-500 text-slate-950 font-black text-lg py-4 px-8 rounded-2xl shadow-[0_0_30px_rgba(250,204,21,0.7)] uppercase tracking-wider active:scale-95 transition">
+        <i class="fa-solid fa-download mr-2"></i> অ্যাপ ইনস্টল করুন
+      </button>
+    </div>
+
+  </main>
+
+  <!-- Single Page Footer -->
+  <footer class="bg-slate-900 border-t border-slate-800 py-6 text-center text-xs text-slate-500">
+    <p class="font-bold text-slate-400">PUBLIC CAB DIRECT DOWNLOAD PORTAL</p>
+    <p class="mt-1">© 2026 Public Cab Agency | All Rights Reserved</p>
+  </footer>
+
+  <!-- Instant Installation Progress Simulation Popup Modal -->
+  <div id="installingModal" class="fixed inset-0 bg-slate-950/90 backdrop-blur-md hidden items-center justify-center p-4 z-50">
+    <div class="bg-slate-900 border border-yellow-400/40 p-8 rounded-3xl max-w-sm w-full text-center space-y-6 shadow-2xl relative overflow-hidden">
+      <div class="w-20 h-20 mx-auto rounded-3xl bg-yellow-400 p-1 border-4 border-yellow-300 shadow-[0_0_30px_rgba(250,204,21,0.7)]">
+        <img id="installingLogo" src="https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?auto=format&fit=crop&w=150&q=80" class="w-full h-full object-cover rounded-2xl">
+      </div>
+      
+      <div class="space-y-2">
+        <h3 class="text-xl font-extrabold text-white">অ্যাপ ডাউনলোড ও ইনস্টলেশন চলছে...</h3>
+        <p class="text-xs text-slate-400">অনুগ্রহ করে কয়েক সেকেন্ড অপেক্ষা করুন</p>
+      </div>
+
+      <!-- Animated Progress Bar -->
+      <div class="w-full bg-slate-950 h-3.5 rounded-full overflow-hidden p-0.5 border border-slate-800">
+        <div class="bg-gradient-to-r from-yellow-400 to-amber-500 h-full rounded-full progress-fill"></div>
+      </div>
+
+      <p class="text-[11px] text-yellow-400 font-bold animate-pulse">ডাইরেক্ট APK ডাউনলোড সম্পন্ন হচ্ছে...</p>
+    </div>
+  </div>
+
+  <!-- Secret Password Entry Popup -->
+  <div id="passwordModal" class="fixed inset-0 bg-slate-950/90 backdrop-blur-md hidden items-center justify-center p-4 z-50">
+    <div class="bg-slate-900 border border-slate-800 p-6 rounded-3xl max-w-sm w-full space-y-4 shadow-2xl">
+      <div class="text-center space-y-1">
+        <i class="fa-solid fa-user-shield text-yellow-400 text-3xl"></i>
+        <h3 class="text-lg font-bold text-white">এডমিন প্যানেল এক্সেস</h3>
+        <p class="text-xs text-slate-400">সিক্রেট পাসওয়ার্ড প্রবেশ করান</p>
+      </div>
+
+      <input type="password" id="secretPassInput" placeholder="পাসওয়ার্ড দিন" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-3 text-center text-white focus:outline-none focus:border-yellow-400 font-bold">
+
+      <div class="flex gap-2">
+        <button onclick="closePasswordModal()" class="w-1/2 bg-slate-800 text-slate-300 font-bold py-2.5 rounded-xl text-sm">বাতিল</button>
+        <button onclick="verifyPassword()" class="w-1/2 bg-yellow-400 text-slate-950 font-black py-2.5 rounded-xl text-sm shadow-md">আনলক করুন</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Secret Admin Control Panel Modal (100% Reliable Storage System) -->
+  <div id="adminModal" class="fixed inset-0 bg-slate-950/95 backdrop-blur-md hidden items-center justify-center p-4 z-50 overflow-y-auto">
+    <div class="bg-slate-900 border border-slate-800 p-6 rounded-3xl max-w-md w-full space-y-5 shadow-2xl my-8">
+      
+      <div class="flex justify-between items-center border-b border-slate-800 pb-3">
+        <h3 class="text-lg font-extrabold text-yellow-400 flex items-center gap-2">
+          <i class="fa-solid fa-sliders"></i> এডমিন কন্ট্রোল প্যানেল
+        </h3>
+        <button onclick="closeAdminModal()" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-2xl"></i></button>
+      </div>
+
+      <div class="space-y-4 text-sm">
+        
+        <!-- APK File Input / Direct Download URL Option -->
+        <div class="bg-slate-950 p-4 rounded-2xl border border-slate-800 space-y-2">
+          <label class="block text-xs font-bold text-yellow-400">
+            <i class="fa-solid fa-file-zipper mr-1"></i> APK অ্যাপ্লিকেশন আপলোড (ফাইল বা লিঙ্ক)
+          </label>
+          <input type="file" id="adminApkFileInput" accept=".apk" class="w-full text-xs text-slate-300 file:mr-3 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-yellow-400 file:text-slate-950 hover:file:bg-amber-400 cursor-pointer mb-2">
+          <input type="url" id="adminApkUrlInput" placeholder="অথবা সরাসরি APK ডাউনলোড লিঙ্ক দিন (https://...)" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-xs text-white focus:outline-none focus:border-yellow-400">
+        </div>
+
+        <!-- Logo Upload Input (File or URL) -->
+        <div class="bg-slate-950 p-4 rounded-2xl border border-slate-800 space-y-2">
+          <label class="block text-xs font-bold text-yellow-400">
+            <i class="fa-solid fa-image mr-1"></i> কোম্পানির লোগো ফটো (ফাইল বা লিঙ্ক)
+          </label>
+          <input type="file" id="adminLogoFileInput" accept="image/*" class="w-full text-xs text-slate-300 file:mr-3 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-yellow-400 file:text-slate-950 hover:file:bg-amber-400 cursor-pointer mb-2">
+          <input type="url" id="adminLogoUrlInput" placeholder="অথবা সরাসরি লোগো লিঙ্ক দিন (https://...)" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-xs text-white focus:outline-none focus:border-yellow-400">
+        </div>
+
+        <!-- Status Progress Box -->
+        <div id="uploadStatusBox" class="hidden p-3 rounded-xl bg-yellow-400/10 border border-yellow-400/30 text-xs text-yellow-300 font-semibold text-center">
+          সেভ করা হচ্ছে...
+        </div>
+
+      </div>
+
+      <div class="pt-2 flex gap-3">
+        <button onclick="closeAdminModal()" class="w-1/2 bg-slate-800 text-slate-300 font-bold py-3 rounded-xl text-sm">বন্ধ করুন</button>
+        <button onclick="saveAdminData()" class="w-1/2 bg-yellow-400 text-slate-950 font-black py-3 rounded-xl text-sm shadow-xl">ইনস্ট্যান্ট সেভ করুন</button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Javascript Logic with Firebase Realtime Database Sync -->
+  <script>
+    // Firebase Configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyDJmu9uD5rT5ee1jNLpMQaTVIa_-yTrPzw",
+      authDomain: "public-service-11054.firebaseapp.com",
+      databaseURL: "https://public-service-11054-default-rtdb.firebaseio.com",
+      projectId: "public-service-11054",
+      storageBucket: "public-service-11054.firebasestorage.app",
+      messagingSenderId: "639313474404",
+      appId: "1:639313474404:web:9ac4645e521021c044c071",
+      measurementId: "G-ZMCRHQ4VC3"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+
+    // Default Configuration
+    let appConfig = {
+      apkUrl: localStorage.getItem('pc_apk_url') || "",
+      logoUrl: localStorage.getItem('pc_logo_url') || "https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?auto=format&fit=crop&w=150&q=80"
+    };
+
+    // Secret Tap Counter (20 Clicks)
+    let tapCount = 0;
+    let tapTimer = null;
+
+    function handleSecretClick() {
+      tapCount++;
+      clearTimeout(tapTimer);
+      tapTimer = setTimeout(() => { tapCount = 0; }, 4000);
+
+      if (tapCount >= 20) {
+        tapCount = 0;
+        document.getElementById('passwordModal').classList.remove('hidden');
+        document.getElementById('passwordModal').classList.add('flex');
+      }
+    }
+
+    // Verify Password (78764825555)
+    function verifyPassword() {
+      const inputPass = document.getElementById('secretPassInput').value.trim();
+      if (inputPass === '78764825555') {
+        closePasswordModal();
+        openAdminModal();
+      } else {
+        alert('ভুল পাসওয়ার্ড! সঠিক এডমিন পাসওয়ার্ড প্রদান করুন।');
+      }
+    }
+
+    function closePasswordModal() {
+      document.getElementById('passwordModal').classList.add('hidden');
+      document.getElementById('passwordModal').classList.remove('flex');
+      document.getElementById('secretPassInput').value = '';
+    }
+
+    function openAdminModal() {
+      document.getElementById('adminApkUrlInput').value = appConfig.apkUrl || '';
+      document.getElementById('adminLogoUrlInput').value = (appConfig.logoUrl && !appConfig.logoUrl.startsWith('data:')) ? appConfig.logoUrl : '';
+      document.getElementById('adminModal').classList.remove('hidden');
+      document.getElementById('adminModal').classList.add('flex');
+    }
+
+    function closeAdminModal() {
+      document.getElementById('adminModal').classList.add('hidden');
+      document.getElementById('adminModal').classList.remove('flex');
+      document.getElementById('uploadStatusBox').classList.add('hidden');
+    }
+
+    // Convert file to Base64 asynchronously
+    function fileToBase64(file) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = error => reject(error);
+      });
+    }
+
+    // Instant Save Handler: Immediate Local & Firebase RTDB Sync
+    async function saveAdminData() {
+      const apkFileInput = document.getElementById('adminApkFileInput');
+      const apkUrlInput = document.getElementById('adminApkUrlInput');
+      const logoFileInput = document.getElementById('adminLogoFileInput');
+      const logoUrlInput = document.getElementById('adminLogoUrlInput');
+      const statusBox = document.getElementById('uploadStatusBox');
+
+      const apkFile = apkFileInput.files[0];
+      const logoFile = logoFileInput.files[0];
+      const directApkUrl = apkUrlInput.value.trim();
+      const directLogoUrl = logoUrlInput.value.trim();
+
+      statusBox.classList.remove('hidden');
+      statusBox.innerText = "সেভ করা হচ্ছে... অনুগ্রহ করে এক মুহূর্ত অপেক্ষা করুন।";
+
+      // 1. Process Logo Input
+      if (logoFile) {
+        try {
+          const base64Logo = await fileToBase64(logoFile);
+          appConfig.logoUrl = base64Logo;
+          localStorage.setItem('pc_logo_url', base64Logo);
+        } catch(e) { console.error(e); }
+      } else if (directLogoUrl) {
+        appConfig.logoUrl = directLogoUrl;
+        localStorage.setItem('pc_logo_url', directLogoUrl);
+      }
+
+      // 2. Process APK Input
+      if (apkFile) {
+        try {
+          const base64Apk = await fileToBase64(apkFile);
+          appConfig.apkUrl = base64Apk;
+          localStorage.setItem('pc_apk_url', base64Apk);
+        } catch(e) { console.error(e); }
+      } else if (directApkUrl) {
+        appConfig.apkUrl = directApkUrl;
+        localStorage.setItem('pc_apk_url', directApkUrl);
+      }
+
+      // Update UI & Local Database
+      updateUI();
+
+      // Sync to Firebase Realtime Database
+      try {
+        db.ref('appConfig').set({
+          apkUrl: appConfig.apkUrl,
+          logoUrl: appConfig.logoUrl
+        });
+      } catch(e) { console.error(e); }
+
+      statusBox.innerText = "সফলভাবে সেভ করা হয়েছে!";
+      
+      setTimeout(() => {
+        closeAdminModal();
+        alert('অভিনন্দন! লোগো ও অ্যাপ সফলভাবে আপলোড এবং সেট হয়ে গেছে।');
+      }, 500);
+    }
+
+    // Refresh UI Components
+    function updateUI() {
+      if (appConfig.logoUrl) {
+        document.getElementById('siteLogo').src = appConfig.logoUrl;
+        document.getElementById('installingLogo').src = appConfig.logoUrl;
+      }
+    }
+
+    // Sync Realtime from Firebase Database
+    db.ref('appConfig').on('value', (snapshot) => {
+      const data = snapshot.val();
+      if (data) {
+        if (data.logoUrl) {
+          appConfig.logoUrl = data.logoUrl;
+          localStorage.setItem('pc_logo_url', data.logoUrl);
+        }
+        if (data.apkUrl) {
+          appConfig.apkUrl = data.apkUrl;
+          localStorage.setItem('pc_apk_url', data.apkUrl);
+        }
+        updateUI();
+      }
+    });
+
+    // Start App Download & Installing Trigger
+    function startAppInstallationProcess() {
+      if (!appConfig.apkUrl) {
+        alert('এডমিন প্যানেল থেকে এখনও কোনো APK ফাইল বা লিঙ্ক সেট করা হয়নি!');
+        return;
+      }
+
+      // Display Simulation Installing Screen
+      const modal = document.getElementById('installingModal');
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+
+      // Trigger Instant Direct File Download
+      const downloadAnchor = document.createElement('a');
+      downloadAnchor.href = appConfig.apkUrl;
+      downloadAnchor.download = 'PublicCab.apk';
+      document.body.appendChild(downloadAnchor);
+      downloadAnchor.click();
+      document.body.removeChild(downloadAnchor);
+
+      // Hide modal after 3.5 seconds
+      setTimeout(() => {
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+      }, 3500);
+    }
+
+    // Initial UI Setup
+    updateUI();
+  </script>
+</body>
+</html>
